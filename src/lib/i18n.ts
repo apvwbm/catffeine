@@ -1,0 +1,364 @@
+// Traducciones. Sin librería: un diccionario por idioma y `traducir()` que sustituye
+// `{variables}`. El castellano es la referencia y define el tipo de las claves, así que
+// a otro idioma no le puede faltar una sin que `tsc` lo diga.
+//
+// Tono de la familia: directo, sin jerga, sin regañar. Sin fechas fijas. Las horas dentro
+// de una frase llegan ya con su artículo en castellano ("las 16:40", "la 1:40"), por eso
+// los textos dicen "hasta {hora}" y no "hasta las {hora}".
+
+import type { Idioma } from '@/types';
+
+const es = {
+  // Genérico
+  'g.guardar': 'Guardar',
+  'g.cancelar': 'Cancelar',
+  'g.deshacer': 'Deshacer',
+  'g.atras': 'Atrás',
+  'g.borrar': 'Borrar',
+  'g.mg': '{n} mg',
+  'g.dias': '{n} días',
+  'g.dia': '1 día',
+
+  // Pestañas
+  'tab.ahora': 'Ahora',
+  'tab.sueno': 'Sueño',
+  'tab.historial': 'Historial',
+
+  // Ahora
+  'ahora.enCuerpo': 'En tu cuerpo ahora',
+  'ahora.hasta': '{bebida} sin problema hasta {hora}',
+  'ahora.yaNo': 'Hoy ya no, si quieres dormir a {hora}',
+  'ahora.cuandoQuieras': '{bebida}, cuando quieras',
+  'ahora.aDormir': 'Es hora de dormir. Si te acuestas ya, te levantas a {hora}',
+  'ahora.verSueno': 'Ver horas',
+  'ahora.dormir': 'A dormir a {hora}',
+  'ahora.cambiar': 'Cambiar',
+  'ahora.apuntar': 'Apuntar',
+  'ahora.otra': 'Otra…',
+  'ahora.apuntada': 'Apuntado: {bebida}',
+  'ahora.hoy': 'Hoy',
+  'ahora.deMaximo': '{n} de {max} mg',
+  'ahora.pasado': 'Por encima del máximo diario.',
+  'ahora.quedara': 'Hasta {mg} mg esta noche: puede quitarte sueño.',
+  'curva.umbral': 'Límite para dormir · {mg} mg',
+  'curva.ahora': 'ahora',
+  'curva.desc': 'Cafeína a lo largo del día: {ahora} mg ahora y hasta {noche} mg esta noche.',
+
+  // Sueño
+  'sueno.levanto': 'Me levanto a las',
+  'sueno.acuesto': 'Me acuesto ya',
+  'sueno.acostarte': 'Acuéstate a las',
+  'sueno.ciclos': '{n} ciclos',
+  'sueno.recomendado': 'Recomendado',
+  'sueno.elegida': 'Tu hora de dormir',
+  'sueno.cafeina': '{mg} mg de cafeína',
+  'sueno.alarma': 'Poner alarma a {hora}',
+  'sueno.siAhora': 'Si te acuestas ya ({hora}), levántate a:',
+  'sueno.cafeinaAhora': 'Tienes {mg} mg de cafeína: puede costarte dormirte.',
+  'sueno.ayuda': 'Ciclos de 90 minutos, más 15 para dormirte.',
+  'alarma.error': 'No se ha podido abrir el reloj',
+
+  // Historial
+  'his.dias14': 'Últimos 14 días',
+  'his.maximo': 'Máximo {mg} mg',
+  'his.barra': '{fecha}: {mg} mg',
+  'his.dias30': 'Últimos 30 días',
+  'his.media': 'Media diaria',
+  'his.encima': 'Días por encima del máximo',
+  'his.ultima': 'Hora habitual de la última',
+  'his.masTomada': 'La que más tomas',
+  'his.vacio': 'Aquí verás tus días cuando apuntes lo que bebes.',
+
+  // Apuntar o editar una toma
+  'toma.nueva': 'Apuntar',
+  'toma.editar': 'Editar',
+  'toma.bebida': 'Bebida',
+  'toma.mg': 'Cafeína (mg)',
+  'toma.cuando': 'Cuándo',
+  'toma.ahora': 'Ahora',
+  'toma.hace': 'Hace {t}',
+  'toma.hora': 'Hora exacta',
+  'toma.ayer': 'Ayer a {hora}',
+  'toma.dosis': 'Más de la dosis única recomendada ({mg} mg).',
+  'toma.borrada': 'Toma borrada',
+  'toma.entero': 'Escribe un número entero.',
+
+  // Tus bebidas
+  'beb.titulo': 'Tus bebidas',
+  'beb.ayuda': 'Las de la estrella son tus botones de Ahora, en este orden.',
+  'beb.anadir': 'Añadir bebida',
+  'beb.nueva': 'Bebida nueva',
+  'beb.nombre': 'Nombre',
+  'beb.subir': 'Subir',
+  'beb.bajar': 'Bajar',
+  'beb.favorita': 'Favorita',
+  'beb.borrada': 'Borrada: {bebida}',
+  'beb.maxFavoritas': 'Como mucho 6 favoritas. Quita una primero.',
+
+  // Ajustes
+  'aj.titulo': 'Ajustes',
+  'aj.idioma': 'Idioma',
+  'aj.ritmo': 'Cómo de rápido eliminas la cafeína',
+  'aj.ritmoAyuda': 'La mitad se va en unas 3, 5 o 10 h. Fumar lo acelera; la píldora y el embarazo lo frenan.',
+  'ritmo.rapido': 'Rápido',
+  'ritmo.normal': 'Normal',
+  'ritmo.lento': 'Lento',
+  'aj.embarazo': 'Embarazo o lactancia',
+  'aj.embarazoAyuda': 'Máximo diario de 200 mg y ritmo lento.',
+  'aj.bebidas': 'Tus bebidas',
+  'aj.datos': 'Tus datos',
+  'aj.exportar': 'Guardar copia cifrada',
+  'aj.importar': 'Restaurar copia',
+  'aj.ultimaCopia': 'Última copia: {fecha}',
+  'aj.borrar': 'Borrar todo',
+  'aj.borrarConfirmar': 'Se borrarán de este móvil todas tus tomas, tus bebidas y tus ajustes.',
+  'aj.borrarSeguro': '¿Seguro? No hay forma de recuperarlo.',
+  'aj.borrado': 'Todo borrado',
+  'aj.acerca': 'Acerca de',
+  'aj.version': 'Versión {v}',
+  'aj.privacidad': 'Todo se queda en tu móvil, cifrado. Sin cuentas, anuncios ni internet.',
+  'aj.adultos': 'Para adultos sanos. Son estimaciones, no consejo médico.',
+  'aj.autor': 'Hecha por Aitor Pérez',
+  'aj.autorAyuda': 'Web y política de privacidad',
+  'aj.cafe': 'Invítame a un café',
+  'aj.fuentes': 'Cómo se calcula',
+  'fu.cafeina': 'Cafeína en tu cuerpo',
+  'fu.cafeinaTexto':
+    'Un modelo de un compartimento: cada bebida se absorbe en unos 45 min y luego se elimina poco a poco. La mitad se va en {normal} h ({rapido} h si eres rápido, {lento} h si eres lento). Fumar lo acelera; la píldora y el embarazo lo frenan.',
+  'fu.tope': 'Hora tope',
+  'fu.topeTexto':
+    'La cafeína tiene que quedar por debajo de {mg} mg toda la noche, no solo al acostarte. No hay una cifra publicada de mg al dormir: {mg} mg es la que reproduce el metaanálisis de 2023 (un café de 107 mg, al menos 8,8 h antes de dormir).',
+  'fu.maximos': 'Máximos',
+  'fu.maximosTexto':
+    '{dia} mg al día para adultos sanos, {embarazo} mg en el embarazo y la lactancia, y {dosis} mg de una vez.',
+  'fu.sueno': 'Ciclos de sueño',
+  'fu.suenoTexto':
+    'Ciclos de {ciclo} min de media (duran de 70 a 120) y {dormirse} min para dormirte, como las calculadoras de sueño. Se recomiendan 5 o 6 porque los adultos necesitan de 7 a 9 h. Lo de despertarse al final de un ciclo es lo que menos estudios tiene detrás.',
+  'fu.bebidas': 'Bebidas',
+  'fu.bebidasTexto':
+    'Valores medios de tablas públicas y fabricantes. Cambian mucho según el bar y la marca: ajústalos en Tus bebidas.',
+
+  // Copia cifrada
+  'copia.exportar': 'Copia cifrada',
+  'copia.importar': 'Restaurar copia',
+  'copia.elegir': 'Elegir archivo',
+  'copia.guardar': 'Guardar copia',
+  'copia.contrasena': 'Contraseña',
+  'copia.repetir': 'Repite la contraseña',
+  'copia.corta': 'Mínimo 6 caracteres.',
+  'copia.noCoinciden': 'Las contraseñas no coinciden.',
+  'copia.malContrasena': 'Contraseña incorrecta o archivo dañado.',
+  'copia.futura': 'Esta copia es de una versión más nueva de la app. Actualiza CAtFFEINE primero.',
+  'copia.sinCifrado': 'Las copias cifradas solo funcionan en la app instalada (APK), no en Expo Go.',
+  'copia.ayudaExportar': 'Si olvidas la contraseña, no hay forma de abrir la copia.',
+  'copia.ayudaImportar': 'Sustituye TODO lo que hay ahora en la app.',
+  'copia.confirmar': 'Se sustituirá todo lo que hay ahora en la app por el contenido de la copia.',
+  'copia.hecha': 'Copia guardada',
+  'copia.importada': 'Copia restaurada',
+
+  // Bebidas del catálogo
+  'bebida.espresso': 'Café solo',
+  'bebida.doble': 'Café solo doble',
+  'bebida.con_leche': 'Café con leche o capuchino',
+  'bebida.americano': 'Americano',
+  'bebida.flat_white': 'Flat white',
+  'bebida.filtro': 'Café de filtro (taza grande)',
+  'bebida.soluble': 'Café soluble',
+  'bebida.cold_brew': 'Cold brew (350 ml)',
+  'bebida.descafeinado': 'Descafeinado',
+  'bebida.te_negro': 'Té negro',
+  'bebida.te_verde': 'Té verde',
+  'bebida.matcha': 'Matcha',
+  'bebida.mate': 'Mate (taza)',
+  'bebida.cola': 'Refresco de cola, lata',
+  'bebida.cola_light': 'Cola light, lata',
+  'bebida.energetica': 'Bebida energética, lata pequeña',
+  'bebida.energetica_grande': 'Bebida energética, lata grande',
+  'bebida.preentreno': 'Pre-entreno (cacito)',
+  'bebida.chocolate_negro': 'Chocolate negro (50 g)',
+  'bebida.chocolate_leche': 'Chocolate con leche (50 g)',
+  'bebida.pastilla': 'Pastilla de cafeína',
+};
+
+export type Clave = keyof typeof es;
+type Diccionario = Record<Clave, string>;
+
+const en: Diccionario = {
+  'g.guardar': 'Save',
+  'g.cancelar': 'Cancel',
+  'g.deshacer': 'Undo',
+  'g.atras': 'Back',
+  'g.borrar': 'Delete',
+  'g.mg': '{n} mg',
+  'g.dias': '{n} days',
+  'g.dia': '1 day',
+
+  'tab.ahora': 'Now',
+  'tab.sueno': 'Sleep',
+  'tab.historial': 'History',
+
+  'ahora.enCuerpo': 'In your body now',
+  'ahora.hasta': '{bebida} OK until {hora}',
+  'ahora.yaNo': 'No more caffeine today if you want to sleep at {hora}',
+  'ahora.cuandoQuieras': '{bebida} is fine any time',
+  'ahora.aDormir': "It's bedtime. Sleep now and wake up at {hora}",
+  'ahora.verSueno': 'See times',
+  'ahora.dormir': 'Bedtime {hora}',
+  'ahora.cambiar': 'Change',
+  'ahora.apuntar': 'Add',
+  'ahora.otra': 'Other…',
+  'ahora.apuntada': '{bebida} added',
+  'ahora.hoy': 'Today',
+  'ahora.deMaximo': '{n} of {max} mg',
+  'ahora.pasado': 'Over the daily maximum.',
+  'ahora.quedara': 'Up to {mg} mg tonight: it may cost you sleep.',
+  'curva.umbral': 'Sleep limit · {mg} mg',
+  'curva.ahora': 'now',
+  'curva.desc': 'Caffeine through the day: {ahora} mg now and up to {noche} mg tonight.',
+
+  'sueno.levanto': 'Wake up at',
+  'sueno.acuesto': 'Sleep now',
+  'sueno.acostarte': 'Go to bed at',
+  'sueno.ciclos': '{n} cycles',
+  'sueno.recomendado': 'Recommended',
+  'sueno.elegida': 'Your bedtime',
+  'sueno.cafeina': '{mg} mg of caffeine',
+  'sueno.alarma': 'Set alarm for {hora}',
+  'sueno.siAhora': 'If you go to bed now ({hora}), wake up at:',
+  'sueno.cafeinaAhora': 'You have {mg} mg of caffeine: falling asleep may take longer.',
+  'sueno.ayuda': '90-minute cycles, plus 15 minutes to fall asleep.',
+  'alarma.error': "Couldn't open the clock app",
+
+  'his.dias14': 'Last 14 days',
+  'his.maximo': 'Max {mg} mg',
+  'his.barra': '{fecha}: {mg} mg',
+  'his.dias30': 'Last 30 days',
+  'his.media': 'Daily average',
+  'his.encima': 'Days over the maximum',
+  'his.ultima': 'Usual last drink',
+  'his.masTomada': 'Most often',
+  'his.vacio': 'Your days will show up here once you add what you drink.',
+
+  'toma.nueva': 'Add a drink',
+  'toma.editar': 'Edit',
+  'toma.bebida': 'Drink',
+  'toma.mg': 'Caffeine (mg)',
+  'toma.cuando': 'When',
+  'toma.ahora': 'Now',
+  'toma.hace': '{t} ago',
+  'toma.hora': 'Exact time',
+  'toma.ayer': 'Yesterday at {hora}',
+  'toma.dosis': 'Above the single-dose guideline ({mg} mg).',
+  'toma.borrada': 'Drink deleted',
+  'toma.entero': 'Write a whole number.',
+
+  'beb.titulo': 'Your drinks',
+  'beb.ayuda': 'Starred drinks are your buttons on Now, in this order.',
+  'beb.anadir': 'Add drink',
+  'beb.nueva': 'New drink',
+  'beb.nombre': 'Name',
+  'beb.subir': 'Move up',
+  'beb.bajar': 'Move down',
+  'beb.favorita': 'Favourite',
+  'beb.borrada': '{bebida} deleted',
+  'beb.maxFavoritas': 'Up to 6 favourites. Unstar one first.',
+
+  'aj.titulo': 'Settings',
+  'aj.idioma': 'Language',
+  'aj.ritmo': 'How fast you clear caffeine',
+  'aj.ritmoAyuda': 'Half is gone in about 3, 5 or 10 h. Smoking speeds it up; the pill and pregnancy slow it down.',
+  'ritmo.rapido': 'Fast',
+  'ritmo.normal': 'Normal',
+  'ritmo.lento': 'Slow',
+  'aj.embarazo': 'Pregnant or breastfeeding',
+  'aj.embarazoAyuda': 'Daily maximum 200 mg and Slow.',
+  'aj.bebidas': 'Your drinks',
+  'aj.datos': 'Your data',
+  'aj.exportar': 'Save encrypted backup',
+  'aj.importar': 'Restore backup',
+  'aj.ultimaCopia': 'Last backup: {fecha}',
+  'aj.borrar': 'Delete everything',
+  'aj.borrarConfirmar': 'This deletes all your drinks, history and settings from this phone.',
+  'aj.borrarSeguro': "Are you sure? There's no way to recover it.",
+  'aj.borrado': 'Everything deleted',
+  'aj.acerca': 'About',
+  'aj.version': 'Version {v}',
+  'aj.privacidad': 'Everything stays on your phone, encrypted. No accounts, ads or internet.',
+  'aj.adultos': 'For healthy adults. Estimates, not medical advice.',
+  'aj.autor': 'Made by Aitor Pérez',
+  'aj.autorAyuda': 'Website and privacy policy',
+  'aj.cafe': 'Buy me a coffee',
+  'aj.fuentes': "How it's calculated",
+  'fu.cafeina': 'Caffeine in your body',
+  'fu.cafeinaTexto':
+    'A one-compartment model: each drink is absorbed in about 45 min and then cleared little by little. Half is gone in {normal} h ({rapido} h if fast, {lento} h if slow). Smoking speeds it up; the pill and pregnancy slow it down.',
+  'fu.tope': 'Latest coffee time',
+  'fu.topeTexto':
+    "Caffeine has to stay below {mg} mg all night, not just at bedtime. There's no published figure for mg at bedtime: {mg} mg is the one that matches the 2023 meta-analysis (a 107 mg coffee at least 8.8 h before bed).",
+  'fu.maximos': 'Limits',
+  'fu.maximosTexto':
+    '{dia} mg a day for healthy adults, {embarazo} mg in pregnancy and breastfeeding, and {dosis} mg at once.',
+  'fu.sueno': 'Sleep cycles',
+  'fu.suenoTexto':
+    '{ciclo}-minute cycles on average (they last 70 to 120) and {dormirse} min to fall asleep, like sleep calculators. 5 or 6 are recommended because adults need 7 to 9 h. Waking up at the end of a cycle is the part with the least research behind it.',
+  'fu.bebidas': 'Drinks',
+  'fu.bebidasTexto':
+    'Averages from public tables and manufacturers. They vary a lot between cafés and brands: adjust them in Your drinks.',
+
+  'copia.exportar': 'Encrypted backup',
+  'copia.importar': 'Restore backup',
+  'copia.elegir': 'Choose file',
+  'copia.guardar': 'Save backup',
+  'copia.contrasena': 'Password',
+  'copia.repetir': 'Repeat the password',
+  'copia.corta': 'At least 6 characters.',
+  'copia.noCoinciden': "The passwords don't match.",
+  'copia.malContrasena': 'Wrong password or damaged file.',
+  'copia.futura': 'This backup comes from a newer version of the app. Update CAtFFEINE first.',
+  'copia.sinCifrado': 'Encrypted backups only work in the installed app (APK), not in Expo Go.',
+  'copia.ayudaExportar': "If you forget the password, there's no way to open the backup.",
+  'copia.ayudaImportar': 'Replaces EVERYTHING currently in the app.',
+  'copia.confirmar': 'Everything currently in the app will be replaced with the contents of the backup.',
+  'copia.hecha': 'Backup saved',
+  'copia.importada': 'Backup restored',
+
+  'bebida.espresso': 'Espresso',
+  'bebida.doble': 'Double espresso',
+  'bebida.con_leche': 'Latte or cappuccino',
+  'bebida.americano': 'Americano',
+  'bebida.flat_white': 'Flat white',
+  'bebida.filtro': 'Filter coffee (mug)',
+  'bebida.soluble': 'Instant coffee',
+  'bebida.cold_brew': 'Cold brew (350 ml)',
+  'bebida.descafeinado': 'Decaf',
+  'bebida.te_negro': 'Black tea',
+  'bebida.te_verde': 'Green tea',
+  'bebida.matcha': 'Matcha',
+  'bebida.mate': 'Yerba mate (cup)',
+  'bebida.cola': 'Cola, can',
+  'bebida.cola_light': 'Diet cola, can',
+  'bebida.energetica': 'Energy drink, small can',
+  'bebida.energetica_grande': 'Energy drink, big can',
+  'bebida.preentreno': 'Pre-workout (scoop)',
+  'bebida.chocolate_negro': 'Dark chocolate (50 g)',
+  'bebida.chocolate_leche': 'Milk chocolate (50 g)',
+  'bebida.pastilla': 'Caffeine pill',
+};
+
+const DICCIONARIOS: Record<Idioma, Diccionario> = { es, en };
+
+export const IDIOMAS: { codigo: Idioma; nombre: string }[] = [
+  { codigo: 'en', nombre: 'English' },
+  { codigo: 'es', nombre: 'Español' },
+];
+
+export function traducir(idioma: Idioma, clave: Clave, vars?: Record<string, string | number>): string {
+  const texto = DICCIONARIOS[idioma][clave] ?? es[clave];
+  return vars ? texto.replace(/\{(\w+)\}/g, (_, k: string) => String(vars[k] ?? `{${k}}`)) : texto;
+}
+
+export type T = (clave: Clave, vars?: Record<string, string | number>) => string;
+
+/** Nombre de una bebida o toma: el traducido si tiene clave conocida, si no el suyo. */
+export const nombreDe = (t: T, x: { clave: string | null; nombre: string }): string =>
+  x.clave && `bebida.${x.clave}` in es ? t(`bebida.${x.clave}` as Clave) : x.nombre;

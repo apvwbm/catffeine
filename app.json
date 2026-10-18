@@ -1,0 +1,53 @@
+{
+  "expo": {
+    "name": "CAtFFEINE",
+    "slug": "catffeine",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "catffeine",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.aitorperez.catffeine"
+    },
+    "android": {
+      "package": "com.aitorperez.catffeine",
+      "versionCode": 1,
+      "allowBackup": false,
+      "permissions": ["com.android.alarm.permission.SET_ALARM"],
+      "blockedPermissions": [
+        "android.permission.INTERNET",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ],
+      "softwareKeyboardLayoutMode": "resize",
+      "predictiveBackGestureEnabled": false,
+      "adaptiveIcon": {
+        "backgroundColor": "#3B4A8C",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#FFFFFF",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 140,
+          "dark": {
+            "backgroundColor": "#0F0F12",
+            "image": "./assets/splash-icon-dark.png"
+          }
+        }
+      ],
+      "expo-sharing",
+      ["expo-sqlite", { "useSQLCipher": true }],
+      "expo-secure-store"
+    ]
+  }
+}
