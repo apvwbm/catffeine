@@ -7,9 +7,9 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Curva } from '@/components/Curva';
 import { Boton, Fila, Icono, Nota, Pantalla, Progreso, Seccion, Texto } from '@/components/ui';
-import { useCafeina, useFormato } from '@/hooks';
+import { useApuntar, useCafeina, useFormato } from '@/hooks';
 import { MAX_FAVORITAS, UMBRAL_SUENO } from '@/lib/catalogo';
-import { apuntar, useApp } from '@/store/app';
+import { useApp } from '@/store/app';
 import { BORDE, espacio, RADIO, TACTIL, typo, useColores, useEstilos, type Paleta } from '@/theme';
 
 export default function Ahora() {
@@ -18,6 +18,7 @@ export default function Ahora() {
   const c = useColores();
   const s = useEstilos(estilos);
   const d = useCafeina();
+  const apuntar = useApuntar();
   const bebidas = useApp((x) => x.bebidas);
   const favoritas = useMemo(() => bebidas.filter((b) => b.favorita).slice(0, MAX_FAVORITAS), [bebidas]);
   const aSueno = () => router.navigate('/sueno');
@@ -27,10 +28,11 @@ export default function Ahora() {
   const veredicto = !bebida
     ? null
     : d.tope === null
-      ? t('ahora.yaNo', { hora: f.fraseDe(d.noche.dormir) })
+      ? t('ahora.yaNo')
       : d.tope === d.noche.dormir
         ? t('ahora.cuandoQuieras', { bebida })
         : t('ahora.hasta', { bebida, hora: f.fraseDe(d.tope) });
+  const titular = d.noche.esHoraDeDormir ? t('ahora.aDormir') : veredicto;
 
   return (
     <Pantalla
@@ -41,28 +43,24 @@ export default function Ahora() {
         </Pressable>
       }
     >
+      {/* Lo grande es la frase (lo que puedes hacer); los mg van debajo, en pequeño. */}
       <View style={s.heroe}>
-        <Texto estilo="micro" tono="texto2">
-          {t('ahora.enCuerpo')}
-        </Texto>
-        <Texto estilo="heroe" tono="acento">
-          {f.mg(Math.round(d.mg))}
-        </Texto>
-        {d.noche.esHoraDeDormir ? (
-          <View style={{ gap: espacio.xs }}>
-            <Texto estilo="cuerpo">{t('ahora.aDormir', { hora: f.fraseDe(d.noche.despertar) })}</Texto>
-            <Boton texto={t('ahora.verSueno')} variante="texto" icono="moon" onPress={aSueno} style={{ alignSelf: 'flex-start' }} />
-          </View>
-        ) : (
-          <>
-            {veredicto && <Texto estilo="cuerpo">{veredicto}</Texto>}
-            <Pressable onPress={aSueno} style={s.dormir} accessibilityRole="button">
-              <Icono nombre="moon" tam={16} tinte={c.texto2} />
-              <Texto tono="texto2">{t('ahora.dormir', { hora: f.fraseDe(d.noche.dormir) })}</Texto>
-              <Texto style={s.enlace}>{t('ahora.cambiar')}</Texto>
-            </Pressable>
-          </>
+        {titular && (
+          <Texto estilo="cifra" tono="acento">
+            {titular}
+          </Texto>
         )}
+        <View style={s.linea}>
+          <Icono nombre="coffee" tam={16} tinte={c.texto2} />
+          <Texto tono="texto2">{t('ahora.enCuerpo', { mg: f.mg(Math.round(d.mg)) })}</Texto>
+        </View>
+        <Pressable onPress={aSueno} style={[s.linea, s.tactil]} accessibilityRole="button">
+          <Icono nombre="moon" tam={16} tinte={c.texto2} />
+          <Texto tono="texto2">
+            {d.noche.esHoraDeDormir ? t('ahora.siDuermes', { hora: f.fraseDe(d.noche.despertar) }) : t('ahora.dormir', { hora: f.fraseDe(d.noche.dormir) })}
+          </Texto>
+          <Texto style={s.enlace}>{t(d.noche.esHoraDeDormir ? 'ahora.verSueno' : 'ahora.cambiar')}</Texto>
+        </Pressable>
       </View>
       {d.picoNoche > UMBRAL_SUENO && <Nota tono="aviso" icono="moon" texto={t('ahora.quedara', { mg: Math.round(d.picoNoche) })} />}
 
@@ -113,7 +111,8 @@ const estilos = (c: Paleta) =>
   StyleSheet.create({
     ajustes: { width: TACTIL, height: TACTIL, alignItems: 'flex-end', justifyContent: 'center' },
     heroe: { gap: espacio.sm, paddingTop: espacio.sm },
-    dormir: { flexDirection: 'row', alignItems: 'center', gap: espacio.sm, minHeight: TACTIL, flexWrap: 'wrap' },
+    linea: { flexDirection: 'row', alignItems: 'center', gap: espacio.sm, flexWrap: 'wrap' },
+    tactil: { minHeight: TACTIL },
     enlace: { textDecorationLine: 'underline' },
     favoritas: { flexDirection: 'row', flexWrap: 'wrap', gap: espacio.sm },
     favorita: {

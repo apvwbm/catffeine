@@ -46,10 +46,12 @@ export default function Sueno() {
                 const alto = h.pico > UMBRAL_SUENO;
                 return (
                   <FilaHora key={h.ciclos} hora={f.hora(h.min)} ciclos={h.ciclos} elegida={h.ciclos === a.ciclos} onPress={() => cambiarAjustes({ ciclos: h.ciclos })}>
-                    <View style={s.cafeina} accessible accessibilityLabel={t('sueno.cafeina', { mg: Math.round(h.pico) })}>
-                      <Icono nombre={alto ? 'alert-circle' : 'coffee'} tam={14} tinte={alto ? c.ocre : c.texto2} />
-                      <Text style={[typo.dato, { color: alto ? c.ocre : c.texto2 }]}>{f.mg(Math.round(h.pico))}</Text>
-                    </View>
+                    {alto && (
+                      <View style={s.cafeina} accessible accessibilityLabel={t('sueno.cafeina', { mg: Math.round(h.pico) })}>
+                        <Icono nombre="coffee" tam={14} tinte={c.ocre} />
+                        <Text style={[typo.dato, { color: c.ocre }]}>{f.mg(Math.round(h.pico))}</Text>
+                      </View>
+                    )}
                   </FilaHora>
                 );
               })}
@@ -95,7 +97,7 @@ function FilaHora({ hora, ciclos, elegida, onPress, children }: { hora: string; 
         <Text style={[typo.cifra, { color: c.texto }]}>{hora}</Text>
         <View style={s.detalle}>
           <Text style={[typo.apoyo, { color: c.texto2 }]}>
-            {t('sueno.ciclos', { n: ciclos })} · {duracion(ciclos * CICLO)}
+            {duracion(ciclos * CICLO)} · {t('sueno.ciclos', { n: ciclos })}
           </Text>
           {CICLOS_RECOMENDADOS.includes(ciclos) && (
             <View style={s.recomendado}>

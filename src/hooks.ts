@@ -2,28 +2,31 @@
 //
 // Las pantallas no calculan nada: sacan de aquí el estado ya derivado, memoizado sobre
 // las porciones del store de las que depende. `ahora` cambia cada minuto, así que la
-// cifra y la curva viven solas.
+// cifra y la curva viven solas. La excepción es `useApuntar`, que pregunta antes de escribir.
 
 import { useMemo } from 'react';
+import { Alert } from 'react-native';
 
-import { UMBRAL_SUENO } from '@/lib/catalogo';
+import { DOSIS_MAXIMA, UMBRAL_SUENO } from '@/lib/catalogo';
 import { aLas, diaDe, duracion, fechaCorta, hora, horaFrase, MIN, minutosDe, numero } from '@/lib/fechas';
 import { nombreDe, traducir, type T } from '@/lib/i18n';
 import {
   curva,
   enCuerpo,
   estadisticas,
+  excede,
   horasDespertar,
   horasDormir,
   maxDuranteNoche,
   maximoDiario,
   noche,
   porDia,
+  totalDia,
   ultimaToma,
   ultimosDias,
   vidaMedia,
 } from '@/lib/motor';
-import { useApp } from '@/store/app';
+import { apuntar, useApp } from '@/store/app';
 import type { Toma } from '@/types';
 
 export function useT(): T {
@@ -126,4 +129,34 @@ export function useHistorial() {
     const dias = ultimosDias(hoy, 14);
     return { dias, mg: porDia(tomas, dias), maximo, cifras: estadisticas(tomas, hoy, maximo), hoy };
   }, [tomas, ajustes, hoy]);
+}
+
+/**
+ * Apuntar una toma nueva, pero si pasa del máximo diario o de la dosis única pregunta
+ * antes. `luego` va después de apuntar (cerrar el modal); si cancelas, no pasa nada.
+ */
+export function useApuntar() {
+  const f = useFormato();
+  const tomas = useApp((x) => x.tomas);
+  const ajustes = useApp((x) => x.ajustes);
+  return (datos: Omit<Toma, 'id'>, texto: string, luego?: () => void) => {
+    const hacer = () => {
+      apuntar(datos, texto);
+      luego?.();
+    };
+    const maximo = maximoDiario(ajustes);
+    const llevas = totalDia(tomas, diaDe(datos.ts));
+    const motivo = excede(llevas, datos.mg, maximo);
+    if (!motivo) return hacer();
+    Alert.alert(
+      f.t(motivo === 'diario' ? 'aviso.diario' : 'aviso.dosis'),
+      motivo === 'diario'
+        ? f.t('aviso.diarioTexto', { n: f.numero(llevas + datos.mg), max: maximo })
+        : f.t('aviso.dosisTexto', { mg: datos.mg, max: DOSIS_MAXIMA }),
+      [
+        { text: f.t('g.cancelar'), style: 'cancel' },
+        { text: f.t('aviso.apuntar'), onPress: hacer },
+      ],
+    );
+  };
 }

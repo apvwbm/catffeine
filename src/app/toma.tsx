@@ -5,11 +5,11 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 
 import { Ayuda, Boton, CampoEntero, Chip, Chips, Nota, Pantalla, Seccion, SelectorHora } from '@/components/ui';
-import { useAhora, useFormato } from '@/hooks';
+import { useAhora, useApuntar, useFormato } from '@/hooks';
 import { DOSIS_MAXIMA } from '@/lib/catalogo';
 import { diaDe, MIN, minutosDe } from '@/lib/fechas';
 import { instanteDeHora } from '@/lib/motor';
-import { apuntar, borrarToma, guardarToma, useApp } from '@/store/app';
+import { borrarToma, guardarToma, useApp } from '@/store/app';
 import type { Toma } from '@/types';
 
 /** Los atajos de "Cuándo", en minutos hacia atrás. */
@@ -20,6 +20,7 @@ export default function TomaModal() {
   const f = useFormato();
   const { t } = f;
   const ahora = useAhora();
+  const apuntar = useApuntar();
   const bebidas = useApp((x) => x.bebidas);
   const existente = useApp((x) => (id ? x.tomas.find((y) => y.id === id) : undefined));
 
@@ -35,9 +36,10 @@ export default function TomaModal() {
 
   const guardar = () => {
     if (!bebida) return;
-    if (existente) guardarToma({ ...existente, ...bebida, mg, ts });
-    else apuntar({ ...bebida, mg, ts: instanteDeHora(hora, Date.now()) }, t('ahora.apuntada', { bebida: f.nombre(bebida) }));
-    router.back();
+    if (existente) {
+      guardarToma({ ...existente, ...bebida, mg, ts });
+      router.back();
+    } else apuntar({ ...bebida, mg, ts: instanteDeHora(hora, Date.now()) }, t('ahora.apuntada', { bebida: f.nombre(bebida) }), router.back);
   };
 
   return (

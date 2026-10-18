@@ -18,6 +18,7 @@ import {
   curva,
   enCuerpo,
   estadisticas,
+  excede,
   horasDespertar,
   horasDormir,
   instanteDeHora,
@@ -82,6 +83,8 @@ bloque('modelo de cafeína');
   igual('curva: empieza en 0', puntos[0].mg, 0);
   igual('ritmo → vida media', [vidaMedia({ ritmo: 'rapido', embarazo: false }), vidaMedia({ ritmo: 'normal', embarazo: false }), vidaMedia({ ritmo: 'lento', embarazo: false })], [3, 5, 10]);
   igual('el embarazo fija el ritmo lento', [ritmoDe({ ritmo: 'rapido', embarazo: true }), vidaMedia({ ritmo: 'rapido', embarazo: true })], ['lento', 10]);
+  igual('aviso al apuntar: nada, máximo diario, dosis única', [excede(0, 64, 400), excede(350, 64, 400), excede(0, 250, 400)], [null, 'diario', 'dosis']);
+  igual('aviso al apuntar: el diario manda, justo en el límite no avisa, sin cafeína nunca', [excede(190, 250, 400), excede(336, 64, 400), excede(0, 200, 400), excede(500, 0, 400)], ['diario', null, null, null]);
   igual('máximo diario normal y en embarazo', [maximoDiario({ embarazo: false }), maximoDiario({ embarazo: true })], [400, 200]);
 }
 

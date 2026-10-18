@@ -2,7 +2,7 @@
   "expo": {
     "name": "CAtFFEINE",
     "slug": "catffeine",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "scheme": "catffeine",
     "icon": "./assets/icon.png",
@@ -13,7 +13,7 @@
     },
     "android": {
       "package": "com.aitorperez.catffeine",
-      "versionCode": 1,
+      "versionCode": 2,
       "allowBackup": false,
       "permissions": ["com.android.alarm.permission.SET_ALARM"],
       "blockedPermissions": [

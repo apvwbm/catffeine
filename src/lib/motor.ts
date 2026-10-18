@@ -6,7 +6,7 @@
 // son el día local de cada toma.
 // ponytail: el día es el natural: una toma a las 00:30 cuenta para el día nuevo.
 
-import { CICLO, DORMIRSE, KA, MAXIMO_DIARIO, MAXIMO_EMBARAZO, OPCIONES_CICLOS, VIDA_MEDIA } from './catalogo';
+import { CICLO, DORMIRSE, DOSIS_MAXIMA, KA, MAXIMO_DIARIO, MAXIMO_EMBARAZO, OPCIONES_CICLOS, VIDA_MEDIA } from './catalogo';
 import { addDias, aLas, diaDe, diasEntre, HORA, MIN, minutosDe, vuelta } from './fechas';
 import type { Ajustes, Ritmo, Toma } from '@/types';
 
@@ -116,6 +116,16 @@ function totales(tomas: Dosis[]): Map<string, number> {
 }
 
 export const totalDia = (tomas: Dosis[], dia: string): number => totales(tomas).get(dia) ?? 0;
+
+/**
+ * Si apuntar `mg` más pasa de lo recomendado: primero el máximo diario (lo que llevas ese
+ * día más esta), si no la dosis única. Una bebida sin cafeína nunca avisa.
+ */
+export function excede(llevas: number, mg: number, maximo: number): 'diario' | 'dosis' | null {
+  if (mg <= 0) return null;
+  if (llevas + mg > maximo) return 'diario';
+  return mg > DOSIS_MAXIMA ? 'dosis' : null;
+}
 
 export function porDia(tomas: Dosis[], dias: string[]): number[] {
   const m = totales(tomas);
